@@ -41,7 +41,7 @@ $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
 $.wskeyList = JSON.parse($.getdata('wskeyList') || '[]');
 if (DEBUG) {
     $.log(`[DEBUG] WSKEY: ${key}`);
-    $.log(`[DEBUG] wskeyList: ${wskeyList}`);
+    $.log(`[DEBUG] wskeyList: ${$.wskeyList}`);
 }
 !(async () => {
     if (!pin || !key) {
