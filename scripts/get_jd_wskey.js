@@ -38,7 +38,7 @@ const key = WSKEY.match(/wskey=([^=;]+?);/)[1];
 $.bot_token = $.getdata('WSKEY_TG_BOT_TOKEN') || '';
 $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
-$.wskeyList = $.getdata('wskeyList');
+$.wskeyList = JSON.parse($.getdata('wskeyList') || '[]');
 if (DEBUG) {
     $.log(`[DEBUG] WSKEY: ${key}`);
     $.log(`[DEBUG] wskeyList: ${wskeyList}`);
@@ -48,13 +48,13 @@ if (DEBUG) {
         $.msg('⚠️ WSKEY 获取失败');
         $.done();
     }
-    wskeyList = JSON.parse($.wskeyList);
+    $.wskeyList = JSON.parse($.wskeyList);
     const cookie = `wskey=${key};pt_pin=${pin};`;
     //通过pin解密后得出userName
     const userName = decodeURIComponent(pin);
     //判断是否已存在cookie',-1:新增ck插入,0:无需更新,>0：按照下标更新
     const index = -1;
-    index = wskeyList.array.forEach((item, index) => {
+    index = $.wskeyList.forEach((item, index) => {
         if (item.userName === userName) {
             if (DEBUG) $.log(`[DEBUG] 已存在cookie: ${item.cookie}`);
             if (item.cookie === cookie) return 0;
@@ -63,16 +63,16 @@ if (DEBUG) {
         }
     });
     if (index === -1) {
-        wskeyList.push({ userName: userName, cookie: cookie });
+        $.wskeyList.push({ userName: userName, cookie: cookie });
         $.msg('🎉 WSKEY 获取成功。（', userName);
     } else if (index > 0) {
-        wskeyList[index].cookie = cookie;
+        $.wskeyList[index].cookie = cookie;
         $.msg('🎉 WSKEY 更新成功。', userName);
     } else {
         $.msg('⚠️ 无需更新 WSKEY。', cookie);
     }
     //无论如何都更新一次列表
-    $.setdata(JSON.stringify(wskeyList, null, 2), 'wskeyList');
+    $.setdata(JSON.stringify($.wskeyList, null, 2), 'wskeyList');
     //自动上传cookie到tg
     if ($.autoUpload !== "false") {
         if (index != -1) {
