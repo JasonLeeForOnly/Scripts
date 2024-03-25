@@ -77,21 +77,17 @@ $.wskeyList = $.getdata('wskeyList') || [];
     $.setdata(JSON.stringify(cookieList, null, 2), 'wskeyList');
     //自动上传cookie到tg
     if ($.autoUpload !== "false") {
-        if (index === -1 || (index >= 0 && isNeedUpdate)) {
+        if (index === -1 || isNeedUpdate) {
             if (typeof ($.chat_ids) != 'object') {
                 $.chat_ids = JSON.parse($.chat_ids);
             }
             if ($.chat_ids.length == 0) {
                 $.log('Using Cloudflare Worker.\n')
-                await updateCookie_1(cookie);
+                await updateCookie_3(cookie, chat_id);
             } else {
                 for (const chat_id of $.chat_ids) {
                     $.log('Using Cloudflare Worker..\n')
-                    let update = await updateCookie_1(cookie, chat_id);
-                    if ($.bot_token && !update) {
-                        $.log('Using Telegram API...\n')
-                        await updateCookie_2(cookie, chat_id);
-                    }
+                    await updateCookie_3(cookie, chat_id);
                 }
             }
         }
@@ -187,9 +183,9 @@ function updateCookie_2(wskey, chat_id) {
     });
 }
 
-function updateCookie_3(wskey, bot_token, chat_id) {
+function updateCookie_3(wskey, chat_id) {
     return new Promise((resolve, reject) => {
-        let url = `https://api.nerver.icu/bot${bot_token}/sendMessage`;
+        let url = `https://api.nerver.icu/bot${$.bot_token}/sendMessage`;
         let body = {
             chat_id: chat_id,
             text: wskey
