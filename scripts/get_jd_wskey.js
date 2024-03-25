@@ -71,7 +71,7 @@ $.wskeyList = $.getdata('wskeyList') || [];
         cookieList[index].cookie = cookie;
         $.msg('🎉 WSKEY 更新成功。', userName);
     } else {
-        $.msg('⚠️ 无需更新 WSKEY。', cookie);
+        //$.msg('⚠️ 无需更新 WSKEY。', cookie);
     }
     //无论如何都更新一次列表
     $.setdata(JSON.stringify(cookieList, null, 2), 'wskeyList');
@@ -120,7 +120,7 @@ function updateCookie_1(wskey, chat_id = false) {
                     data = JSON.parse(data);
                     if (data.ok) {
                         $.subt = `🎉 【${respBody?.userInfoSns?.petName || '京东'}】WSKEY 提交成功。`;
-                        $.msg($.subt, wskey);
+                        //$.msg($.subt, wskey);
                         $.success = true;
                     } else if (data.error_code === 400) {
                         $.subt = '⚠️ Telegram bot 无发送消息权限。';
