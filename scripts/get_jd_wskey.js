@@ -56,7 +56,8 @@ $.wskeyList = $.getdata('wskeyList') || [];
     //判断是否已存在cookie',-1:新增ck插入,0:无需更新,>0：按照下标更新
     let isNeedUpdate = false;
     let index = cookieList.findIndex((item, index) => {
-        if (DEBUG) $.log(`[DEBUG] item: ${item}`);
+        if (DEBUG) $.log(`[DEBUG] item.userName: ${item.userName}`);
+        if (DEBUG) $.log(`[DEBUG] item.cookie: ${item.cookie}`);
         if (item.userName === userName) {
             if (item.cookie !== cookie) isNeedUpdate = true;
             return true;
@@ -66,7 +67,7 @@ $.wskeyList = $.getdata('wskeyList') || [];
     if (index === -1) {
         cookieList.push({ userName: userName, cookie: cookie });
         $.msg('🎉 WSKEY 获取成功。（', userName);
-    } else if (index > 0 && isNeedUpdate) {
+    } else if (index >= 0 && isNeedUpdate) {
         cookieList[index].cookie = cookie;
         $.msg('🎉 WSKEY 更新成功。', userName);
     } else {
