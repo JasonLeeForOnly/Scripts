@@ -39,14 +39,16 @@ $.bot_token = $.getdata('WSKEY_TG_BOT_TOKEN') || '';
 $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
 $.wskeyList = $.getdata('wskeyList') || [];
-if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
+if (DEBUG) {
+    $.log(`[DEBUG] WSKEY: ${key}`);
+    $.log(`[DEBUG] wskeyList: ${wskeyList}`);
+}
 !(async () => {
     if (!pin || !key) {
         $.msg('⚠️ WSKEY 获取失败');
         $.done();
     }
     wskeyList = JSON.parse($.wskeyList);
-    if (DEBUG) $.log(`[DEBUG] WSKEY_LIST: ${wskeyList}`);
     const cookie = `wskey=${key};pt_pin=${pin};`;
     //通过pin解密后得出userName
     const userName = decodeURIComponent(pin);
