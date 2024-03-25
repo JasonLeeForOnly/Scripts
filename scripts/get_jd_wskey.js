@@ -40,6 +40,7 @@ $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
 $.wskeyList = !$.wskeyList || $.wskeyList.length === 0 ? [] : $.getdata('wskeyList');
 if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
+if (DEBUG) $.log(`[DEBUG] WSKEY_LIST: ${wskeyList}`);
 !(async () => {
     if (!pin || !key) {
         $.msg('⚠️ WSKEY 获取失败');
