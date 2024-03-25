@@ -45,7 +45,7 @@ if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
         $.msg('⚠️ WSKEY 获取失败');
         $.done();
     }
-    const cookieList = [];
+    let cookieList = [];
     if ($.wskeyList !== undefined && $.wskeyList !== null && $.wskeyList !== "") {
         cookieList = JSON.parse($.wskeyList);
     }
@@ -54,7 +54,7 @@ if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
     //通过pin解密后得出userName
     const userName = decodeURIComponent(pin);
     //判断是否已存在cookie',-1:新增ck插入,0:无需更新,>0：按照下标更新
-    const index = -1;
+    let index = -1;
     index = cookieList.forEach((item, index) => {
         if (item.userName === userName) {
             if (DEBUG) $.log(`[DEBUG] 已存在cookie: ${item.cookie}`);
