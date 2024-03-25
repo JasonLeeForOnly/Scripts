@@ -38,7 +38,7 @@ const key = WSKEY.match(/wskey=([^=;]+?);/)[1];
 $.bot_token = $.getdata('WSKEY_TG_BOT_TOKEN') || '';
 $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
-$.wskeyList = $.getdata('wskeyList') || [];
+$.wskeyList = $.getdata('wskeyList');
 if (DEBUG) {
     $.log(`[DEBUG] WSKEY: ${key}`);
     $.log(`[DEBUG] wskeyList: ${wskeyList}`);
