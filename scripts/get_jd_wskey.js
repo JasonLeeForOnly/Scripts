@@ -39,7 +39,6 @@ $.bot_token = $.getdata('WSKEY_TG_BOT_TOKEN') || '';
 $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
 $.wskeyList = $.getdata('wskeyList') || [];
-if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
 !(async () => {
     if (!pin || !key) {
         $.msg('⚠️ WSKEY 获取失败');
@@ -51,16 +50,19 @@ if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
     }
     if (DEBUG) $.log(`[DEBUG] cookieList: ${cookieList}`);
     const cookie = `wskey=${key};pt_pin=${pin};`;
+    if (DEBUG) $.log(`[DEBUG] cookie: ${cookie}`);
     //通过pin解密后得出userName
     const userName = decodeURIComponent(pin);
     //判断是否已存在cookie',-1:新增ck插入,0:无需更新,>0：按照下标更新
     let isNeedUpdate = false;
     let index = cookieList.findIndex((item, index) => {
+        if (DEBUG) $.log(`[DEBUG] item: ${item}`);
         if (item.userName === userName) {
             if (item.cookie !== cookie) isNeedUpdate = true;
             return true;
         }
     });
+    if (DEBUG) $.log(`[DEBUG] index: ${index}`);
     if (index === -1) {
         cookieList.push({ userName: userName, cookie: cookie });
         $.msg('🎉 WSKEY 获取成功。（', userName);
