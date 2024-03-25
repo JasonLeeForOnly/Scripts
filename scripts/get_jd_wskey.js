@@ -78,14 +78,114 @@ $.wskeyList = $.getdata('wskeyList') || [];
     //自动上传cookie到tg
     if ($.autoUpload !== "false") {
         if (index === -1 || (index >= 0 && isNeedUpdate)) {
-            $.log(`[DEBUG] chat_ids: ${$.chat_ids}`);
-            for (const chat_id of $.chat_ids) {
-                await updateCookie_3(cookie, $.bot_token, chat_id);
+            if (typeof ($.chat_ids) != 'object') {
+                $.chat_ids = JSON.parse($.chat_ids);
+            }
+            if ($.chat_ids.length == 0) {
+                $.log('Using Cloudflare Worker.\n')
+                await updateCookie_1(cookie);
+            } else {
+                for (const chat_id of $.chat_ids) {
+                    $.log('Using Cloudflare Worker..\n')
+                    let update = await updateCookie_1(cookie, chat_id);
+                    if ($.bot_token && !update) {
+                        $.log('Using Telegram API...\n')
+                        await updateCookie_2(cookie, chat_id);
+                    }
+                }
             }
         }
     }
     return;
 })().catch((e) => $.logErr(e)).finally(() => $.done());
+function updateCookie_1(wskey, chat_id = false) {
+    url = "https://api.fokit.cn/submit";
+    if ($.bot_token) {
+        url += `?bot_token=${$.bot_token}`;
+    };
+    if (chat_id) {
+        url += `&chat_id=${chat_id}`;
+    };
+    let opt = {
+        url,
+        body: `text=${wskey}`,
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+        },
+        timeout: 10000,
+    };
+    return new Promise(resolve => {
+        $.post(opt, async (err, resp, data) => {
+            try {
+                if (err) {
+                    $.log(`${JSON.stringify(err)}\n`);
+                    $.success = false;
+                } else {
+                    data = JSON.parse(data);
+                    if (data.ok) {
+                        $.subt = `🎉 【${respBody?.userInfoSns?.petName || '京东'}】WSKEY 提交成功。`;
+                        $.msg($.subt, wskey);
+                        $.success = true;
+                    } else if (data.error_code === 400) {
+                        $.subt = '⚠️ Telegram bot 无发送消息权限。';
+                        $.msg($.subt, wskey);
+                        $.success = false;
+                    } else if (data.error_code === 401) {
+                        $.subt = '⚠️ Telegram bot token 填写错误。';
+                        $.msg($.subt, wskey);
+                        $.success = false;
+                    } else {
+                        $.log("请求失败：", typeof data, $.toStr(data));
+                        $.success = false;
+                    }
+                }
+            } catch (error) {
+                $.logErr(error);
+            } finally {
+                resolve($.success);
+            }
+        })
+    })
+}
+
+function updateCookie_2(wskey, chat_id) {
+    return new Promise((resolve) => {
+        const opts = {
+            url: `https://api.telegram.org/bot${$.bot_token}/sendMessage`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `chat_id=${chat_id}&text=${wskey}&disable_web_page_preview=true`,
+        };
+        $.post(opts, (err, resp, data) => {
+            try {
+                if (err) {
+                    $.log(`${JSON.stringify(err)}\n`);
+                    $.success = false;
+                } else {
+                    data = JSON.parse(data);
+                    if (data.ok) {
+                        $.subt = `🎉 【${respBody?.userInfoSns?.petName || '京东'}】WSKEY 提交成功。`;
+                        $.msg($.subt, wskey);
+                        $.success = true;
+                    } else if (data.error_code === 400) {
+                        $.subt = '⚠️ Telegram bot 无发送消息权限。';
+                        $.msg($.subt, wskey);
+                        $.success = false;
+                    } else if (data.error_code === 401) {
+                        $.subt = '⚠️ Telegram bot token 填写错误。';
+                        $.msg($.subt, wskey);
+                        $.success = false;
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp);
+            } finally {
+                resolve($.success);
+            }
+        });
+    });
+}
 
 function updateCookie_3(wskey, bot_token, chat_id) {
     return new Promise((resolve, reject) => {
