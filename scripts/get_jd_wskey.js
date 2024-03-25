@@ -48,18 +48,16 @@ $.wskeyList = $.getdata('wskeyList') || [];
     if ($.wskeyList !== undefined && $.wskeyList !== null && $.wskeyList !== "") {
         cookieList = JSON.parse($.wskeyList);
     }
-    if (DEBUG) $.log(`[DEBUG] cookieList: ${cookieList}`);
+    $.log(`[DEBUG] cookieList: ${cookieList}`);
     const cookie = `wskey=${key};pt_pin=${pin};`;
-    if (DEBUG) $.log(`[DEBUG] cookie: ${cookie}`);
+    $.log(`[DEBUG] cookie: ${cookie}`);
     //通过pin解密后得出userName
     const userName = decodeURIComponent(pin);
     //判断是否已存在cookie',-1:新增ck插入,0:无需更新,>0：按照下标更新
     let isNeedUpdate = false;
     let index = cookieList.findIndex((item, index) => {
-        if (DEBUG) {
-            $.log(`[DEBUG] userName: ${item.userName}`);
-            $.log(`[DEBUG] cookie: ${item.cookie}`);
-        }
+        $.log(`[DEBUG] userName: ${item.userName}`);
+        $.log(`[DEBUG] cookie: ${item.cookie}`);
         if (item.userName === userName) {
             if (item.cookie !== cookie) isNeedUpdate = true;
             return true;
@@ -80,7 +78,9 @@ $.wskeyList = $.getdata('wskeyList') || [];
     //自动上传cookie到tg
     if ($.autoUpload !== "false") {
         if (index === -1 || (index >= 0 && isNeedUpdate)) {
-            await updateCookie_3(cookie, chat_id);
+            for (const chat_id of $.chat_ids) {
+                await updateCookie_3(cookie, $.bot_token, chat_id);
+            }
         }
     }
     return;
@@ -89,12 +89,10 @@ $.wskeyList = $.getdata('wskeyList') || [];
 function updateCookie_3(wskey, bot_token, chat_id) {
     return new Promise((resolve, reject) => {
         let url = `https://api.nerver.icu/bot${bot_token}/sendMessage`;
-
         let body = {
-            chat_id: $.chat_ids[0],
+            chat_id: chat_id,
             text: wskey
         };
-
         $.post({
             url: url,
             headers: {
