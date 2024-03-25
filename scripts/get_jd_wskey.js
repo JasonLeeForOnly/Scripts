@@ -38,14 +38,14 @@ const key = WSKEY.match(/wskey=([^=;]+?);/)[1];
 $.bot_token = $.getdata('WSKEY_TG_BOT_TOKEN') || '';
 $.chat_ids = $.getdata('WSKEY_TG_USER_ID') || [];
 $.autoUpload = $.getdata('WSKEY_AUTO_UPLOAD') || '';
-$.wskeyList = $.getdata('wskeyList');
+$.wskeyList = $.getdata('wskeyList') || [];
 if (DEBUG) $.log(`[DEBUG] WSKEY: ${key}`);
 !(async () => {
     if (!pin || !key) {
         $.msg('⚠️ WSKEY 获取失败');
         $.done();
     }
-    wskeyList = !$.getdata('wskeyList') || $.wskeyList.length === 0 ? [] : $.wskeyList;
+    wskeyList = JSON.parse($.wskeyList);
     if (DEBUG) $.log(`[DEBUG] WSKEY_LIST: ${wskeyList}`);
     const cookie = `wskey=${key};pt_pin=${pin};`;
     //通过pin解密后得出userName
