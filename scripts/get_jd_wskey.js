@@ -77,21 +77,18 @@ $.wskeyList = $.getdata('wskeyList') || [];
     $.setdata(JSON.stringify(cookieList, null, 2), 'wskeyList');
     
     //自动上传cookie到tg
-     $.msg('测试',"1");
     if ($.autoUpload != "false") {
         if (index === -1 || isNeedUpdate) {
-             $.msg('测试',"2");
             if (typeof ($.chat_ids) != 'object') {
                 $.chat_ids = JSON.parse($.chat_ids);
             }
-             $.msg('测试',"3");
             if ($.chat_ids.length == 0) {
                 $.log('Using Cloudflare Worker.\n')
-                await updateCookie_3(cookie, chat_id);
+                await updateCookie_2(cookie, chat_id);
             } else {
                 for (const chat_id of $.chat_ids) {
                     $.log('Using Cloudflare Worker..\n')
-                    await updateCookie_3(cookie, chat_id);
+                    await updateCookie_2(cookie, chat_id);
                 }
             }
         }
