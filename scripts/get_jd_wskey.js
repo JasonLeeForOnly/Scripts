@@ -66,10 +66,10 @@ $.wskeyList = $.getdata('wskeyList') || [];
     if (DEBUG) $.log(`[DEBUG] index: ${index}`);
     if (index === -1) {
         cookieList.push({ userName: userName, cookie: cookie });
-        $.msg('🎉 WSKEY 获取成功。', userName, cookie);
+        $notify('🎉 WSKEY 获取成功。', cookie);
     } else if (index >= 0 && isNeedUpdate) {
         cookieList[index].cookie = cookie;
-        $.msg('🎉 WSKEY 更新成功。', userName, cookie);
+        $notify('🎉 WSKEY 更新成功。', cookie);
     } else {
         //$.msg('⚠️ 无需更新 WSKEY。', cookie);
     }
