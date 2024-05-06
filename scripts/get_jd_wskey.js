@@ -72,7 +72,7 @@ $.wskeyList = $.getdata('wskeyList') || [];
         $notify('🎉 WSKEY 更新成功。', cookie);
     } else {
         //$.msg('⚠️ 无需更新 WSKEY。', cookie);
-    }
+    } 
     //无论如何都更新一次列表
     $.setdata(JSON.stringify(cookieList, null, 2), 'wskeyList');
     
