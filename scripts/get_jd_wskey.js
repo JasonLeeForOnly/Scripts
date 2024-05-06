@@ -75,12 +75,16 @@ $.wskeyList = $.getdata('wskeyList') || [];
     }
     //无论如何都更新一次列表
     $.setdata(JSON.stringify(cookieList, null, 2), 'wskeyList');
+    
     //自动上传cookie到tg
-    if ($.autoUpload !== "false") {
+     $.msg('测试',"1");
+    if ($.autoUpload != "false") {
         if (index === -1 || isNeedUpdate) {
+             $.msg('测试',"2");
             if (typeof ($.chat_ids) != 'object') {
                 $.chat_ids = JSON.parse($.chat_ids);
             }
+             $.msg('测试',"3");
             if ($.chat_ids.length == 0) {
                 $.log('Using Cloudflare Worker.\n')
                 await updateCookie_3(cookie, chat_id);
@@ -92,8 +96,10 @@ $.wskeyList = $.getdata('wskeyList') || [];
             }
         }
     }
+    
     return;
 })().catch((e) => $.logErr(e)).finally(() => $.done());
+
 function updateCookie_1(wskey, chat_id = false) {
     url = "https://api.fokit.cn/submit";
     if ($.bot_token) {
